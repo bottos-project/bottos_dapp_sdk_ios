@@ -1,24 +1,24 @@
-#iOS BottosSDK使用介绍
-##一：SDK集成（CocoaPods）
-#####1:使用CocoaPods导入以下第三方到项目中
+# iOS BottosSDK使用介绍
+## 一：SDK集成（CocoaPods）
+##### 1:使用CocoaPods导入以下第三方到项目中
 > pod 'CryptoSwift', '~> 0.10.0'
 > pod 'TrezorCrypto', '~> 0.0.9'
 > pod 'TrustCore', :git=>'https://github.com/TrustWallet/trust-core', :branch=> 'master'
-#####2:下载BottosSDK添加到项目中，导入BTOSDK.h。
-##二：创建公钥、私钥、Keystore
-#####1:首先在需要创建的类中，导入KeystoreKeyTool.h。
-#####2:然后调用实例方法,进行公私钥创建。方法如下：
+##### 2:下载BottosSDK添加到项目中，导入BTOSDK.h。
+## 二：创建公钥、私钥、Keystore
+##### 1:首先在需要创建的类中，导入KeystoreKeyTool.h。
+##### 2:然后调用实例方法,进行公私钥创建。方法如下：
 >-(void)creatPrivateKeyAndPublicKeyWithCompleted: (completedBlock)completedblock
-#####3:完成后“completedBlock”内部会包含公私钥的json字符串，可通过BTOTool.h中的convertToDictionary实例方法转化成字典。并取出公私钥。
-#####4:拿到私钥后，输入密码。之后将密码和私钥传入KeystoreKeyTool类中的创建Keystore实例方法中。方法如下：
+##### 3:完成后“completedBlock”内部会包含公私钥的json字符串，可通过BTOTool.h中的convertToDictionary实例方法转化成字典。并取出公私钥。
+##### 4:拿到私钥后，输入密码。之后将密码和私钥传入KeystoreKeyTool类中的创建Keystore实例方法中。方法如下：
 >-(void)creatKeyStoreKeyWithPrivateKey:(NSString *)privateKey password:(NSString *)password completed: (completedBlock)completedblock
-#####“completedblock”block中包含Keystore，取出并进行保存.
-#####5:后续进行交易操作时，需要传递私钥进行签名验证。可通过传入Keystore和密码，调用KeystoreKeyTool类中解出私钥方法进行获取。方法如下：
+##### “completedblock”block中包含Keystore，取出并进行保存.
+##### 5:后续进行交易操作时，需要传递私钥进行签名验证。可通过传入Keystore和密码，调用KeystoreKeyTool类中解出私钥方法进行获取。方法如下：
 >-(void)recoverPrivateKeyWithKeystoreKeyJson:(NSString *)keystoreKeyJson password:(NSString *)password completed: (completedBlock)completedblock
 
-##三：接口相关说明
-######注：所有接口与域名均以宏的形式定义在BTONetworkManager类中，可以根据需要自行使用。
-###创建账号
+## 三：接口相关说明
+###### 注：所有接口与域名均以宏的形式定义在BTONetworkManager类中，可以根据需要自行使用。
+### 创建账号
 >**接口说明**：注册Bottos钱包账号
 >
 >**URL**：/v1/wallet/createaccount
@@ -82,10 +82,10 @@ HTTP/1.1 200 OK
 
 
 
-###交易相关
-######注：所有交易相关接口，均通过同一个接口实现。内部根据所传递的参数不同，对业务进行区分。其中所有参数传递均是通过BTOReqObj类进行，BTOReqObj类中包含所有交易相关接口的共同参数属性，需根据要求进行传递。在每项业务单独需要的参数中需实现BTOReqObj子类中所定义的属性值进行传递。为避免自己继承BTOReqObj, 发起请求时只发送SDK内部的BTOReqObj子类。
+### 交易相关
+###### 注：所有交易相关接口，均通过同一个接口实现。内部根据所传递的参数不同，对业务进行区分。其中所有参数传递均是通过BTOReqObj类进行，BTOReqObj类中包含所有交易相关接口的共同参数属性，需根据要求进行传递。在每项业务单独需要的参数中需实现BTOReqObj子类中所定义的属性值进行传递。为避免自己继承BTOReqObj, 发起请求时只发送SDK内部的BTOReqObj子类。
 
-####BTOReqObj通用参数
+#### BTOReqObj通用参数
 >**接口说明**： 发送交易信息
 >
 >**URL**：/v1/transaction/send
@@ -101,7 +101,7 @@ HTTP/1.1 200 OK
 > | privateKey |   True   |   string   |    无    |    私钥（只在签名时需要，不会做保存操作）  |
 > |memo|   False   |   string   |    无    |  备注 |
 
-####1:BTOTransferObj（转账/交易）
+#### 1:BTOTransferObj（转账/交易）
 该子类共包含5个特有参数
 > | 属性                | 必选 | 类型 | 默认值 | 说明 |
 > | -------------- | ------- | -------- | ------ | -------- |
@@ -122,7 +122,7 @@ transfer.privateKey = privateKey;
 transfer.amount = @(1.0);
 transfer.method = @"transfer";
 ```
-####2:BTOStakeObj（质押/赎回）
+#### 2:BTOStakeObj（质押/赎回）
 > | 属性                | 必选 | 类型 | 默认值 | 说明 |
 > | -------------- | ------- | -------- | ------ | -------- |
 > | amount |   True   |   float   |    无    |    数量  |
@@ -147,7 +147,7 @@ stakeSpaceObj.source = @"space";//空间赎回  若为时间赎回则传time
 stakeSpaceObj.privateKey = privateKey;
 ```
 
-####3:BTOClaimObj（提现）
+#### 3:BTOClaimObj（提现）
 > | 属性                | 必选 | 类型 | 默认值 | 说明 |
 > | -------------- | ------- | -------- | ------ | -------- |
 > | amount |   True   |   string   |    无    |    提现数量  |
@@ -160,7 +160,7 @@ claimObj.amount = @"1.34";
 claimObj.privateKey = privateKey;
 ```
 
-####4:BTOVoteObj（投票）
+#### 4:BTOVoteObj（投票）
 > | 属性                | 必选 | 类型 | 默认值 | 说明 |
 > | -------------- | ------- | -------- | ------ | -------- |
 > | voteop |   True   |   string   |    无    |    是否全部投票1：全投；  |
@@ -176,7 +176,7 @@ voteObj.voteop = @"1";
 voteObj.voter = @"voterAccount";
 ```
 
-####5:BTORewardObj（提取奖励）
+#### 5:BTORewardObj（提取奖励）
 > | 属性                | 必选 | 类型 | 默认值 | 说明 |
 > | -------------- | ------- | -------- | ------ | -------- |
 > | account |   True   |   string   |    无    |    用户名  |
@@ -190,7 +190,7 @@ rewardObj.account = @"rewardAccount";
 rewardObj.privateKey = privateKey;
 ```
 
-####6:BTOProposalObj（提案/创建多签账户）
+#### 6:BTOProposalObj（提案/创建多签账户）
 > | 属性                | 必选 | 类型 | 默认值 | 说明 |
 > | -------------- | ------- | -------- | ------ | -------- |
 > | to |   False   |   string   |    无    |  收款人的BTO账号【name为pushmsignproposal（发起提案）时必填,其余情况不填】  |
@@ -226,7 +226,7 @@ proposal.amount = @"123";
 proposal.privateKey = privateKey;
 ```
 
-####构建请求对象完成，发送网络请求。具体实现如下：
+#### 构建请求对象完成，发送网络请求。具体实现如下：
 ```
 BTOApi *api = [BTOApi new];
 [api sendObj:obj success:^(NSDictionary *responseData) {
@@ -279,4 +279,4 @@ HTTP/1.1 200 OK
 }
 ```
 
-######注：其中BTOApi为BottosSDK中的网络请求类，sendObj方法为处理交易的方法。obj对象为以上业务所构建的对象实例。调用者只需关注子类对象参数，和子类业务类型即可。responseData和error为网络请求返回的正确或错误的数据，调用者根据自身需求进行业务处理。
+###### 注：其中BTOApi为BottosSDK中的网络请求类，sendObj方法为处理交易的方法。obj对象为以上业务所构建的对象实例。调用者只需关注子类对象参数，和子类业务类型即可。responseData和error为网络请求返回的正确或错误的数据，调用者根据自身需求进行业务处理。
