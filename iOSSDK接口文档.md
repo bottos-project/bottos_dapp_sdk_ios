@@ -2,7 +2,9 @@
 ## 一：SDK集成（CocoaPods）
 ##### 1:使用CocoaPods导入以下第三方到项目中
 > pod 'CryptoSwift', '~> 0.10.0'
+>
 > pod 'TrezorCrypto', '~> 0.0.9'
+>
 > pod 'TrustCore', :git=>'https://github.com/TrustWallet/trust-core', :branch=> 'master'
 ##### 2:下载BottosSDK添加到项目中，导入BTOSDK.h。
 ## 二：创建公钥、私钥、Keystore
