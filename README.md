@@ -9,7 +9,7 @@
 ##### 2:下载BottosSDK添加到项目中，导入BTOSDK.h。
 ##### 3:因为SDK中的KeystoreTool相关方法通过Swift和Objective-C混编生成，若要使用，必须先在项目中进行相关设置，设置如下。
 （1）：Build Setting-->Packaing-->Defines Module置为YES
-（2）：Build Setting-->Packaing-->Product Module Name和Product Name设置为AnyWallet
+（2）：Build Setting-->Packaing-->Product Module Name设置为AnyWallet
 ## 二：创建公钥、私钥、Keystore
 ##### 1:首先在需要创建的类中，导入KeystoreKeyTool.h。
 ##### 2:然后调用实例方法,进行公私钥创建。方法如下：
