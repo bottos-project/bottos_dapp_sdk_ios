@@ -48,7 +48,7 @@
 
 **接口示例**
 
-> 地址：<http://127.0.0.1:6869/v1/wallet/createaccount >
+> 地址：< http://wallet.chainbottos.com:6869/v1/wallet/createaccount >
 
 - 请求：
 
