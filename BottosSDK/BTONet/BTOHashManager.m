@@ -5,7 +5,7 @@
 //  Created by ZZL on 2019/5/28.
 //  Copyright © 2019 ZZL. All rights reserved.
 //
-#import "BTONetworkManager.h"
+
 #import "BTOHashManager.h"
 #import "BTOURLConnection.h"
 #import "BTOTool.h"
@@ -38,10 +38,9 @@
     self.statusBlock = status;
     self.failureBlock = failure;
     self.isRegister = YES;
-    _timerFire = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerAction) userInfo:nil repeats:YES];
-    [_timerFire fire];
-    
-    _timerInt = 0;
+    self->_timerFire = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerAction) userInfo:nil repeats:YES];
+    [self->_timerFire fire];
+    self->_timerInt = 0;
 }
 
 - (void)timerAction{
@@ -50,7 +49,6 @@
     if (_timerInt == 30) {
         [_timerFire invalidate];
         _timerFire = nil;
-//        self.failureBlock(NSLocalizedString(@"RequestNot", nil));
         self.failureBlock(@"Request not responded");
         return;
     }
@@ -69,7 +67,8 @@
         NSLog(@"getHash------------------%@----%p",responseDic,&responseDic);
         NSInteger code = [responseDic[@"errcode"] intValue];
         NSLog(@"errcode------------------%ld\n",code);
-        if (code != AWErrorCodePending && code != AWErrorCodePacked && code != AWErrorCodeSending) {
+        
+        if (code != AWErrorCodePending && code != AWErrorCodePacked && code != AWErrorCodeSending && code != AWErrorCodeNotFound) {
             NSLog(@"%p timer already fire",&self->_timerFire);
             [self->_timerFire invalidate];
             self->_timerFire = nil;

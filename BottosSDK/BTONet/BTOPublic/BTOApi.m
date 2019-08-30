@@ -191,7 +191,8 @@
             break;
         case AWErrorCodePending:
         case AWErrorCodePacked:
-        case AWErrorCodeSending: {
+        case AWErrorCodeSending:
+        case AWErrorCodeNotFound:{
             NSLog(@"-------------requesting");
         }
             break;
@@ -216,7 +217,8 @@
             self.success(@{@"msg":msg,@"trx_hash":trxHash2});
         }
             break;
-        case 10201: {
+        case 10201:
+        case 20301:{
             NSLog(@"--------requesting");
         }
             break;

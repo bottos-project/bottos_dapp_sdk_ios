@@ -32,12 +32,12 @@
 #define aw_queryVoterList  @"/superNode/queryVoterList" //投票人接口
 #define aw_supernode_list @"/superNode/queryNodeListAuto"//超级节点列表
 #define aw_multiSignAccount_list @"/getMsignaccount"//多签账号列表
-#define aw_multiSignProposal_list @"/getMsignProposal"//多签提案列表
+#define aw_multiSignProposal_list @"/getMsignProposalList"//多签提案列表
 #define aw_supernode_updataNodeInfo @"/superNode/updateNodeInfo" //上传超级节点信息
 //-------------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-
+//#import "Reachability.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

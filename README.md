@@ -7,9 +7,11 @@
 >
 > pod 'TrustCore', :git=>'https://github.com/TrustWallet/trust-core', :branch=> 'master'
 ##### 2:下载BottosSDK添加到项目中，导入BTOSDK.h。
-##### 3:因为SDK中的KeystoreTool相关方法通过Swift和Objective-C混编生成，若要使用，必须先在项目中进行相关设置，设置如下。
+
+##### 3:因为项目中的KeystoreTool相关方法通过Swift和Objective-C混编生成，若要使用，必须先在项目中进行相关设置，设置如下。
 （1）：Build Setting-->Packaing-->Defines Module置为YES
-（2）：Build Setting-->Packaing-->Product Module Name设置为AnyWallet
+（2）：Build Setting-->Packaing-->Product Module Name和Product Name设置为AnyWallet
+
 ## 二：创建公钥、私钥、Keystore
 ##### 1:首先在需要创建的类中，导入KeystoreKeyTool.h。
 ##### 2:然后调用实例方法,进行公私钥创建。方法如下：
@@ -23,7 +25,7 @@
 
 ## 三：接口相关说明
 ###### 注：所有接口与域名均以宏的形式定义在BTONetworkManager类中，可以根据需要自行使用。
-### 创建账号
+##### 创建账号（由bottos服务节点完成账号注册）------方式1
 >**接口说明**：注册Bottos钱包账号
 >
 >**URL**：/v1/wallet/createaccount
@@ -36,7 +38,7 @@
 > | -------------- | ------- | -------- | ------ | -------- |
 > | account_name|   True   |   string   |    无    |   账户名   |
 > |public_key|   True   |   string   |    无    |   账户公钥  |
-> | referrer |   False   |   string   |    无    |    引荐人  |
+> | referrer |   True   |   string   |   bottosreferrer1    |    引荐人  |
 
 **响应字段：**
 
@@ -48,7 +50,7 @@
 
 **接口示例**
 
-> 地址：< http://wallet.chainbottos.com:6869/v1/wallet/createaccount >
+> 地址：<http://127.0.0.1:6869/v1/wallet/createaccount >
 
 - 请求：
 
@@ -87,8 +89,8 @@ HTTP/1.1 200 OK
 
 
 
-### 交易相关
-###### 注：所有交易相关接口，均通过同一个接口实现。内部根据所传递的参数不同，对业务进行区分。其中所有参数传递均是通过BTOReqObj类进行，BTOReqObj类中包含所有交易相关接口的共同参数属性，需根据要求进行传递。在每项业务单独需要的参数中需实现BTOReqObj子类中所定义的属性值进行传递。为避免自己继承BTOReqObj, 发起请求时只发送SDK内部的BTOReqObj子类。
+### Transaction相关
+###### 注：所有Transaction接口，均通过同一个接口实现。内部根据所传递的参数不同，对业务进行区分。其中所有参数传递均是通过BTOReqObj类进行，BTOReqObj类中包含所有交易相关接口的共同参数属性，需根据要求进行传递。在每项业务单独需要的参数中需实现BTOReqObj子类中所定义的属性值进行传递。为避免自己继承BTOReqObj, 发起请求时只发送SDK内部的BTOReqObj子类。
 
 #### BTOReqObj通用参数
 >**接口说明**： 发送交易信息
@@ -102,11 +104,26 @@ HTTP/1.1 200 OK
 > | 属性                | 必选 | 类型 | 默认值 | 说明 |
 > | -------------- | ------- | -------- | ------ | -------- |
 > | method|   True   |   string   |    无    |   业务方法名（必须全为小写,详细请查看对象试例中method属性值）   |
-> |sender|   True   |   string   |    无    |   执行人  |
-> | privateKey |   True   |   string   |    无    |    私钥（只在签名时需要，不会做保存操作）  |
+> |sender|   True   |   string   |    无    |   执行人（注册账号时，该项为引荐人账号）  |
+> | privateKey |   True   |   string   |    无    |    私钥（1:注册账号时，该项为引荐人私钥 2:私钥只在签名时需要，不会做保存操作 ）  |
 > |memo|   False   |   string   |    无    |  备注 |
+####1:BTOTransferObj（注册账号）
+##### 创建账号（由个人服务节点完成账号注册）------方式2
+> | 属性                | 必选 | 类型 | 默认值 | 说明 |
+> | -------------- | ------- | -------- | ------ | -------- |
+> | name|   True   |   string   |    无    |   账户名   |
+> |pubKey|   True   |   string   |    无    |   公钥  |
+- 构建注册请求对象实例：
+```
+BTORegisterObj *transfer = [BTORegisterObj new];
+transfer.sender = @"referrerAccount";
+transfer.privateKey = privateKey;
+transfer.pubKey = publicKey;
+transfer.name = @"testAccount";
+transfer.method = @"newaccount";
+```
 
-#### 1:BTOTransferObj（转账/交易）
+#### 2:BTOTransferObj（转账/交易）
 该子类共包含5个特有参数
 > | 属性                | 必选 | 类型 | 默认值 | 说明 |
 > | -------------- | ------- | -------- | ------ | -------- |
@@ -127,7 +144,7 @@ transfer.privateKey = privateKey;
 transfer.amount = @(1.0);
 transfer.method = @"transfer";
 ```
-#### 2:BTOStakeObj（质押/赎回）
+#### 3:BTOStakeObj（质押/赎回）
 > | 属性                | 必选 | 类型 | 默认值 | 说明 |
 > | -------------- | ------- | -------- | ------ | -------- |
 > | amount |   True   |   float   |    无    |    数量  |
@@ -152,7 +169,7 @@ stakeSpaceObj.source = @"space";//空间赎回  若为时间赎回则传time
 stakeSpaceObj.privateKey = privateKey;
 ```
 
-#### 3:BTOClaimObj（提现）
+#### 4:BTOClaimObj（提现）
 > | 属性                | 必选 | 类型 | 默认值 | 说明 |
 > | -------------- | ------- | -------- | ------ | -------- |
 > | amount |   True   |   string   |    无    |    提现数量  |
@@ -165,7 +182,7 @@ claimObj.amount = @"1.34";
 claimObj.privateKey = privateKey;
 ```
 
-#### 4:BTOVoteObj（投票）
+#### 5:BTOVoteObj（投票）
 > | 属性                | 必选 | 类型 | 默认值 | 说明 |
 > | -------------- | ------- | -------- | ------ | -------- |
 > | voteop |   True   |   string   |    无    |    是否全部投票1：全投；  |
@@ -181,7 +198,7 @@ voteObj.voteop = @"1";
 voteObj.voter = @"voterAccount";
 ```
 
-#### 5:BTORewardObj（提取奖励）
+#### 6:BTORewardObj（提取奖励）
 > | 属性                | 必选 | 类型 | 默认值 | 说明 |
 > | -------------- | ------- | -------- | ------ | -------- |
 > | account |   True   |   string   |    无    |    用户名  |
@@ -195,7 +212,7 @@ rewardObj.account = @"rewardAccount";
 rewardObj.privateKey = privateKey;
 ```
 
-#### 6:BTOProposalObj（提案/创建多签账户）
+#### 7:BTOProposalObj（提案/创建多签账户）
 > | 属性                | 必选 | 类型 | 默认值 | 说明 |
 > | -------------- | ------- | -------- | ------ | -------- |
 > | to |   False   |   string   |    无    |  收款人的BTO账号【name为pushmsignproposal（发起提案）时必填,其余情况不填】  |
@@ -283,5 +300,3 @@ HTTP/1.1 200 OK
 }
 }
 ```
-
-###### 注：其中BTOApi为BottosSDK中的网络请求类，sendObj方法为处理交易的方法。obj对象为以上业务所构建的对象实例。调用者只需关注子类对象参数，和子类业务类型即可。responseData和error为网络请求返回的正确或错误的数据，调用者根据自身需求进行业务处理。

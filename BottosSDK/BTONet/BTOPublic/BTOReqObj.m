@@ -12,6 +12,10 @@
 
 @end
 
+@implementation BTORegisterObj
+
+@end
+
 @implementation BTOLoginObj
 
 @end

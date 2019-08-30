@@ -99,7 +99,10 @@ static BTOChainAction *manager = nil;
  */
 - (void)getResponseDic:(id)obj success:(void (^)(NSDictionary *responseData))success failure:(void (^)(NSString *error))failure {
     
-    if ([obj isKindOfClass:[BTOTransferObj class]]) {
+    if ([obj isKindOfClass:[BTORegisterObj class]]) {
+        //注册
+        [self getRegisterDic:obj success:success failure:failure];
+    } else if ([obj isKindOfClass:[BTOTransferObj class]]) {
         //转账
         [self getTransferDic:obj success:success failure:failure];
     } else if ([obj isKindOfClass:[BTOPushTransactionObj class]]) {
@@ -120,6 +123,35 @@ static BTOChainAction *manager = nil;
     } else if ([obj isKindOfClass:[BTOClaimObj class]]) {
         //提现
         [self getClaimDic:obj success:success failure:failure];
+    }
+}
+
+
+/**
+ 注册
+
+ @param obj 入参对象(BTORegisterObj)
+ @param success 成功
+ @param failure 失败
+ */
+- (void)getRegisterDic:(BTORegisterObj *)obj success:(void (^)(NSDictionary *responseData))success failure:(void (^)(NSString *error))failure {
+    NSDictionary *blockHeight = [BTOObj share].blockHeight_[@"result"];
+    NSMutableDictionary *bodyDic = @{@"version":blockHeight[@"head_block_version"],
+                                     @"cursor_num":blockHeight[@"head_block_num"],
+                                     @"cursor_label":blockHeight[@"cursor_label"],
+                                     @"lifetime":blockHeight[@"head_block_time"],
+                                     @"contract":@"bottos",
+                                     @"method":obj.method,
+                                     @"param":@{
+                                                @"name":obj.name,
+                                                @"pubkey":obj.pubKey
+                                                }
+                                     }.mutableCopy;
+    if (obj.sender.length > 0) {
+        [bodyDic setObject:obj.sender forKey:@"sender"];
+        success(bodyDic);
+    } else {
+        failure(@"sender字段不能为空");
     }
 }
 

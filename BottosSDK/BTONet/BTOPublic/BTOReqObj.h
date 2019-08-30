@@ -6,7 +6,6 @@ FOUNDATION_EXTERN NSString *const kBTOSDKActionTransfer;
 FOUNDATION_EXTERN NSString *const kBTOSDKActionPushTransaction;
 
 
-#pragma mark ~~~~~~~~~~~~~~~~~~~~~~~
 #pragma mark ~~~~ BTOReqObj ~~~~
 
 /*! @class   BTOReqObj
@@ -15,8 +14,8 @@ FOUNDATION_EXTERN NSString *const kBTOSDKActionPushTransaction;
  */
 @interface BTOReqObj : NSObject
 @property (nonatomic, copy) NSString *method;         // 方法名 <必须>
-@property (nonatomic, copy) NSString *sender;       //合约执行人<必须>
-@property (nonatomic, copy) NSString *privateKey;   // 私钥，用于签名（不会保存在本地或服务器，只在签名时使用）<必须>
+@property (nonatomic, copy) NSString *sender;       //合约执行人<必须>,   注册操作时该字段为引荐人账号
+@property (nonatomic, copy) NSString *privateKey;   // 私钥，用于签名（不会保存在本地或服务器，只在签名时使用）<必须>,  注册操作时该字段为引荐人私钥
 @property (nonatomic, copy, readonly) NSString *protocol;     // 协议名，钱包用来区分不同协议，本协议为 SimpleWallet
 @property (nonatomic, copy, readonly) NSString *version;      // 协议版本信息，如1.0
 @property (nonatomic, copy) NSString *dappName;     // dapp名字，用于在钱包APP中展示;   <可选>
@@ -51,7 +50,19 @@ FOUNDATION_EXTERN NSString *const kBTOSDKActionPushTransaction;
 
 @end
 
+#pragma mark ~~~ BTORegisterObj ~~~
 
+/*!
+ * @class BTORegisterObj
+ * @brief 注册授权数据
+ */
+@interface BTORegisterObj : BTOReqObj
+
+@property (nonatomic, copy) NSString *name;           //用户名;       <必选>
+
+@property (nonatomic, copy) NSString *pubKey;         //公钥;         <必选>
+
+@end
 
 #pragma mark ~~~~ BTOLoginObj ~~~~
 
@@ -64,7 +75,6 @@ FOUNDATION_EXTERN NSString *const kBTOSDKActionPushTransaction;
 @property (nonatomic, copy) NSString *wallet;         // 请求授权的BTO账号;   <可选>
 
 @end
-
 
 
 #pragma mark ~~~~ BTOTransferObj ~~~~
@@ -103,6 +113,8 @@ FOUNDATION_EXTERN NSString *const kBTOSDKActionPushTransaction;
 
 @end
 
+#pragma mark ~~~~ BTOStakeObj ~~~~
+
 /**
  * @class BTOStakeObj
  * @brief 质押/赎回 授权数据
@@ -117,6 +129,7 @@ FOUNDATION_EXTERN NSString *const kBTOSDKActionPushTransaction;
 
 @end
 
+#pragma mark ~~~~ BTOClaimObj ~~~~
 
 /**
  * @class BTOClaimObj
@@ -127,6 +140,8 @@ FOUNDATION_EXTERN NSString *const kBTOSDKActionPushTransaction;
 @property (nonatomic, copy) NSString *amount; //提现数量<必须>
 
 @end
+
+#pragma mark ~~~~ BTOVoteObj ~~~~
 
 /**
  * @class BTOVoteObj
@@ -142,6 +157,8 @@ FOUNDATION_EXTERN NSString *const kBTOSDKActionPushTransaction;
 
 @end
 
+#pragma mark ~~~~ BTORewardObj ~~~~
+
 /**
  * @class BTORewardObj
  * @brief 提取奖励
@@ -151,6 +168,8 @@ FOUNDATION_EXTERN NSString *const kBTOSDKActionPushTransaction;
 @property (nonatomic, copy) NSString *account;      //用户名;  <必须>
 
 @end
+
+#pragma mark ~~~~ BTOProposalObj ~~~~
 
 /**
  * @class BTOProposalObj

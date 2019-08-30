@@ -8,8 +8,10 @@ FOUNDATION_EXPORT double BTOSDKVersionNumber;
 FOUNDATION_EXPORT const unsigned char BTOSDKVersionString[];
 
 #import "BTOApi.h"
+#import "BTOObj.h"
 #import "BTOTool.h"
 #import "BTOReqObj.h"
 #import "BTORespObj.h"
 #import "BTOHashManager.h"
+#import "BTOChainAction.h"
 #import "BTONetworkManager.h"
