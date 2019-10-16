@@ -13,7 +13,7 @@
 @implementation KeystoreKeyTool
 
 /*创建公私钥*/
-- (void)creatPrivateKeyAndPublicKeyWithCompleted: (completedBlock)completedblock{
+- (void)creatPrivateKeyAndPublicKeyWithCompleted:(completedBlock)completedblock{
     NSError *error = nil;
     NSString *key = [KeystoreKeyCreatTool creatPrivateKeyAndPublicKeyAndReturnError:&error];
     if (error) {
@@ -27,10 +27,10 @@
     }
 }
 
-/*根据私钥和密码生成keystorekey*/
-- (void)creatKeyStoreKeyWithPrivateKey:(NSString *)privateKey password:(NSString *)password completed: (completedBlock)completedblock{
+/*根据私钥,密码,账号生成keystore*/
+- (void)creatKeyStoreKeyWithPrivateKey:(NSString *)privateKey password:(NSString *)password account:(NSString *)account completed:(completedBlock)completedblock{
     NSError *error = nil;
-    NSString *key =  [KeystoreKeyCreatTool creatKeyStoreKeyWithPrivateKey:privateKey password:password error:&error];
+    NSString *key = [KeystoreKeyCreatTool creatKeyStoreKeyWithPrivateKey:privateKey password:password error:&error];
     if (error) {
         //NSLocalizedString(@"KeyStoreKeyFail", nil) --> KeyStoreKey creation failed, please pass in the correct privateKey/password
         NSError *error = [NSError errorWithDomain:@"KeyStoreKey"
@@ -38,14 +38,19 @@
                                          userInfo:@{ NSLocalizedDescriptionKey : NSLocalizedString(@"KeyStoreKeyFail", nil) }];
         completedblock(@"",error);
     }else{
-        completedblock(key,nil);
+        //拼接account到keystore
+        NSDictionary *keyDic = [[BTOTool share] convertToDictionary:key];
+        [keyDic setValue:account forKey:@"account"];
+        NSString *keystore = [[BTOTool share] convertToJsonString:keyDic];
+        completedblock(keystore,nil);
     }
-    
 }
 
 /*根据keystoreKey和密码解出私钥*/
-- (void)recoverPrivateKeyWithKeystoreKeyJson:(NSString *)keystoreKeyJson password:(NSString *)password completed: (completedBlock)completedblock{
+- (void)recoverPrivateKeyWithKeystoreKeyJson:(NSString *)keystoreKeyJson password:(NSString *)password completed:(completedBlock)completedblock{
+    
     NSError *error = nil;
+    
     //安卓和iOS端生成的version类型不同 这里做了转换 统一替换成int类型
     if (![keystoreKeyJson hasPrefix:@"{"] && ![keystoreKeyJson hasSuffix:@"}"]) {
         //NSLocalizedString(@"login-enter-correct-Keystore", nil) --> Please enter the correct Keystore
@@ -62,7 +67,7 @@
         [keyDict setObject:@([version intValue]) forKey:@"version"];
         NSString *keyStoreString = [[BTOTool share] convertToJsonString:keyDict];
         
-        NSString *key =  [KeystoreKeyCreatTool recoverKeystoreKeyPrivateKeyWithKeystoreKeyJson:keyStoreString password:password error:&error];
+        NSString *key = [KeystoreKeyCreatTool recoverKeystoreKeyPrivateKeyWithKeystoreKeyJson:keyStoreString password:password error:&error];
         if (error) {
             //NSLocalizedString(@"sdk-privatekey-password", nil) --> Failed to get PrivateKey, please pass in the correct keystoreKeyJson/password
             NSError *error = [NSError errorWithDomain:@"recoverPrivateKey"
@@ -76,7 +81,7 @@
 }
 
 /*根据私钥生成公钥*/
-- (void)getPublicKeyWithPrivateKey:(NSString *)privateKey completed: (completedBlock)completedblock{
+- (void)getPublicKeyWithPrivateKey:(NSString *)privateKey completed:(completedBlock)completedblock{
     NSError *error = nil;
     NSString *key = [KeystoreKeyCreatTool getPublicKeyWithPrivateKey:privateKey error:&error];
     if (error) {
