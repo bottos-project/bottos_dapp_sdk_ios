@@ -57,25 +57,27 @@
         error = [NSError errorWithDomain:@"dataError" code:-2 userInfo:@{ NSLocalizedDescriptionKey : NSLocalizedString(@"login-enter-correct-Keystore", nil) }];
         completedblock(@"",error);
     } else {
+        
         NSMutableDictionary *keyDict = [[BTOTool share] convertToDictionary:keystoreKeyJson].mutableCopy;
         if (!keyDict) {
             //NSLocalizedString(@"sdk-json-error", nil) --> Json parsing failed
             error = [NSError errorWithDomain:@"jsonParseError" code:-2 userInfo:@{ NSLocalizedDescriptionKey : NSLocalizedString(@"sdk-json-error", nil) }];
             completedblock(@"",error);
-        }
-        NSString *version = [NSString stringWithFormat:@"%@",keyDict[@"version"]];
-        [keyDict setObject:@([version intValue]) forKey:@"version"];
-        NSString *keyStoreString = [[BTOTool share] convertToJsonString:keyDict];
-        
-        NSString *key = [KeystoreKeyCreatTool recoverKeystoreKeyPrivateKeyWithKeystoreKeyJson:keyStoreString password:password error:&error];
-        if (error) {
-            //NSLocalizedString(@"sdk-privatekey-password", nil) --> Failed to get PrivateKey, please pass in the correct keystoreKeyJson/password
-            NSError *error = [NSError errorWithDomain:@"recoverPrivateKey"
-                                                 code:-1
-                                             userInfo:@{ NSLocalizedDescriptionKey : NSLocalizedString(@"sdk-privatekey-password", nil) }];
-            completedblock(@"",error);
-        }else{
-            completedblock(key,nil);
+        } else {
+            NSString *version = [NSString stringWithFormat:@"%@",keyDict[@"version"]];
+            [keyDict setObject:@([version intValue]) forKey:@"version"];
+            NSString *keyStoreString = [[BTOTool share] convertToJsonString:keyDict];
+            
+            NSString *key = [KeystoreKeyCreatTool recoverKeystoreKeyPrivateKeyWithKeystoreKeyJson:keyStoreString password:password error:&error];
+            if (error) {
+                //NSLocalizedString(@"sdk-privatekey-password", nil) --> Failed to get PrivateKey, please pass in the correct keystoreKeyJson/password
+                NSError *error = [NSError errorWithDomain:@"recoverPrivateKey"
+                                                     code:-1
+                                                 userInfo:@{ NSLocalizedDescriptionKey : NSLocalizedString(@"sdk-privatekey-password", nil) }];
+                completedblock(@"",error);
+            }else{
+                completedblock(key,nil);
+            }
         }
     }
 }

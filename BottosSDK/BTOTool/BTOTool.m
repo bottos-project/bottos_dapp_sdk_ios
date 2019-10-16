@@ -105,12 +105,15 @@ static BTOTool *manager;
 - (NSDictionary *)convertToDictionary:(NSString *)jsonString
 {
     
-    if (jsonString == nil) {
+    if (jsonString.length <= 0) {
         return nil;
     }
+    //替换中文引号
+    jsonString = [jsonString stringByReplacingOccurrencesOfString:@"”" withString:@"\""];
+    jsonString = [jsonString stringByReplacingOccurrencesOfString:@"“" withString:@"\""];
     
     NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-    NSError *err;
+    NSError *err = nil;
     NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
                                                         options:NSJSONReadingMutableContainers
                                                           error:&err];
@@ -124,7 +127,7 @@ static BTOTool *manager;
 // NSDictionary-------->NSString
 - (NSString *)convertToJsonString:(NSDictionary *)dic
 {
-    NSError *error;
+    NSError *error = nil;
     
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:&error];
     NSString *jsonString;

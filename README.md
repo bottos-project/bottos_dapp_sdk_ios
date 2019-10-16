@@ -18,7 +18,7 @@
 >-(void)creatPrivateKeyAndPublicKeyWithCompleted: (completedBlock)completedblock
 ##### 3:完成后“completedBlock”内部会包含公私钥的json字符串，可通过BTOTool.h中的convertToDictionary实例方法转化成字典。并取出公私钥。
 ##### 4:拿到私钥后，输入密码。之后将密码、私钥、账户名传入KeystoreKeyTool类中的创建Keystore实例方法中。方法如下：
->- (void)creatKeyStoreKeyWithPrivateKey:(NSString *)privateKey password:(NSString *)password account:(NSString *)account completed:(completedBlock)completedblock;
+>-(void)creatKeyStoreKeyWithPrivateKey:(NSString *)privateKey password:(NSString *)password account:(NSString *)account completed:(completedBlock)completedblock;
 ##### “completedblock”block中包含Keystore，取出并进行保存.
 ##### 5:后续进行交易操作时，需要传递私钥进行签名验证。可通过传入Keystore和密码，调用KeystoreKeyTool类中解出私钥方法进行获取。方法如下：
 >-(void)recoverPrivateKeyWithKeystoreKeyJson:(NSString *)keystoreKeyJson password:(NSString *)password completed: (completedBlock)completedblock
