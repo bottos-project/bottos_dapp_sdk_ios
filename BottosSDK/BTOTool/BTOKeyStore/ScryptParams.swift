@@ -18,11 +18,11 @@ public struct ScryptParams {
 
     /// The N parameter of Scrypt encryption algorithm, using 4MB memory and taking approximately 100ms CPU time on a
     /// modern processor.
-    public static let lightN = 1 << 12
+    public static let lightN = 1 << 11
 
     /// The P parameter of Scrypt encryption algorithm, using 4MB memory and taking approximately 100ms CPU time on a
     /// modern processor.
-    public static let lightP = 6
+    public static let lightP = 1
 
     /// Default `R` parameter of Scrypt encryption algorithm.
     public static let defaultR = 8
